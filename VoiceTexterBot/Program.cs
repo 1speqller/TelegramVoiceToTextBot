@@ -55,7 +55,8 @@ namespace VoiceTexterBot
                 DownloadsFolder = "C:\\Users\\hoshi\\Downloads",
                 AudioFileName = "audio",
                 InputAudioFormat = "ogg",
-                OutputAudioFormat = "wav"
+                OutputAudioFormat = "wav",
+                InputAudioBitrate = 48000
             };
         }
     }

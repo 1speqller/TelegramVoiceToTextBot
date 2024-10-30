@@ -9,6 +9,10 @@ namespace VoiceTexterBot.Services
         /// Хранилище сессий
         /// </summary>
         private readonly ConcurrentDictionary<long, Session> _sessions;
+        public MemoryStorage()
+        {
+            _sessions = new ConcurrentDictionary<long, Session>();
+        }
 
         public Session GetSession(long chatId)
         {
