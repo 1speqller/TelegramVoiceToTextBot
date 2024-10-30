@@ -7,15 +7,17 @@ namespace VoiceTexterBot.Controllers
 {
     public class VoiceMessageController
     {
+        private readonly AppSettings _appSettings;
         private readonly IStorage _memoryStorage;
         private readonly ITelegramBotClient _telegramClient;
         private readonly IFileHandler _audioFileHandler;
 
-        public VoiceMessageController(ITelegramBotClient telegramBotClient, IFileHandler audioFileHandler, IStorage memoryStorage)
+        public VoiceMessageController(ITelegramBotClient telegramBotClient, IFileHandler audioFileHandler, IStorage memoryStorage, AppSettings appSettings)
         {
             _telegramClient = telegramBotClient;
             _audioFileHandler = audioFileHandler;
             _memoryStorage = memoryStorage;
+            _appSettings = appSettings;
         }
 
         public async Task Handle(Message message, CancellationToken ct)
