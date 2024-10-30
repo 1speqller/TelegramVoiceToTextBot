@@ -34,6 +34,7 @@ namespace VoiceTexterBot
             services.AddSingleton(appSettings);
 
             services.AddSingleton<IStorage, MemoryStorage>();
+            services.AddSingleton<IFileHandler, AudioFileHandler>();
 
             services.AddTransient<DefaultMessageController>();
             services.AddTransient<VoiceMessageController>();
@@ -50,7 +51,11 @@ namespace VoiceTexterBot
         {
             return new AppSettings()
             {
-                BotToken = "8055439169:AAH41-QxN4_GFd8YA9P9tE0Yy6YebF4osRc"
+                BotToken = "8055439169:AAH41-QxN4_GFd8YA9P9tE0Yy6YebF4osRc",
+                DownloadsFolder = "C:\\Users\\hoshi\\Downloads",
+                AudioFileName = "audio",
+                InputAudioFormat = "ogg",
+                OutputAudioFormat = "wav"
             };
         }
     }

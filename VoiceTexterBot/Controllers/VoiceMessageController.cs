@@ -1,22 +1,36 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using VoiceTexterBot.Configuration;
+using VoiceTexterBot.Services;
 
 namespace VoiceTexterBot.Controllers
 {
     public class VoiceMessageController
     {
+        private readonly IStorage _memoryStorage;
         private readonly ITelegramBotClient _telegramClient;
+        private readonly IFileHandler _audioFileHandler;
 
-        public VoiceMessageController(ITelegramBotClient telegramBotClient)
+        public VoiceMessageController(ITelegramBotClient telegramBotClient, IFileHandler audioFileHandler, IStorage memoryStorage)
         {
             _telegramClient = telegramBotClient;
+            _audioFileHandler = audioFileHandler;
+            _memoryStorage = memoryStorage;
         }
 
         public async Task Handle(Message message, CancellationToken ct)
         {
-            Console.WriteLine($"Контроллер {GetType().Name} получил сообщение");
-            await _telegramClient.SendTextMessageAsync(message.Chat.Id, $"Получено голосовое сообщение", cancellationToken: ct);
+            var fileId = message.Voice?.FileId;
+            if (fileId == null)
+                return;
+
+            await _audioFileHandler.Download(fileId, ct);
+            await _telegramClient.SendTextMessageAsync(message.Chat.Id, "Голосовое сообщение загружено", cancellationToken: ct);
+
+            // Получаем язык из сессии пользователя и обрабатываем аудио
+            string userLanguageCode = _memoryStorage.GetSession(message.Chat.Id).LanguageCode; 
+            _audioFileHandler.Process(userLanguageCode);
+            await _telegramClient.SendTextMessageAsync(message.Chat.Id, "Голосовое сообщение конвертировано в формат .WAV", cancellationToken: ct);
         }
     }
 }
